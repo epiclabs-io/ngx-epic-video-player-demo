@@ -1,11 +1,19 @@
 {
   "name": "ngx-epic-video-player",
-  "version": "0.0.2-alpha1",
+  "version": "0.0.2-alpha2",
   "author": {
     "name": "Adrian Caballero",
     "email": "adrian@epiclabs.io",
-    "url": "https://www.epiclabs.io"
+    "url": "https://www.epiclabs.io/"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/epiclabs-io/ngx-epic-video-player-demo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/epiclabs-io/ngx-epic-video-player-demo/issues",
+    "email": "adrian@epiclabs.io"
+  }
   "peerDependencies": {
     "@angular/common": "^7.1.1",
     "@angular/core": "^7.1.1"

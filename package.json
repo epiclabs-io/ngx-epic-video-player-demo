@@ -50,5 +50,18 @@
     "tslib": "^1.9.3",
     "tslint": "^5.11.0",
     "typescript": "3.1.6"
+  },
+  "author": {
+    "name": "Adrian Caballero",
+    "email": "adrian@epiclabs.io",
+    "url": "https://www.epiclabs.io/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/epiclabs-io/ngx-epic-video-player-demo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/epiclabs-io/ngx-epic-video-player-demo/issues",
+    "email": "adrian@epiclabs.io"
   }
 }
