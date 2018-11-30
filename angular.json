@@ -126,6 +126,41 @@
           }
         }
       }
+    },
+    "ngx-epic-video-player": {
+      "root": "projects/ngx-epic-video-player",
+      "sourceRoot": "projects/ngx-epic-video-player/src",
+      "projectType": "library",
+      "prefix": "vp",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-epic-video-player/tsconfig.lib.json",
+            "project": "projects/ngx-epic-video-player/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-epic-video-player/src/test.ts",
+            "tsConfig": "projects/ngx-epic-video-player/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-epic-video-player/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-epic-video-player/tsconfig.lib.json",
+              "projects/ngx-epic-video-player/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "ngx-epic-video-player-demo"
