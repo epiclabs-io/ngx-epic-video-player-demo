@@ -25,7 +25,7 @@ and
 })
 ```
 
-3. Make use of it in one of your templates living under the module in which you imported the library:
+3. Make use of it in one of the components living under the module in which you imported the library:
 
 ```
 <vp-ngx-epic-video-player url="https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd"></vp-ngx-epic-video-player>

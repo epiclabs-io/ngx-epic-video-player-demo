@@ -6,6 +6,7 @@
   },
   "whitelistedNonPeerDependencies": [
     "dashjs",
+    "hls.js",
     "stream"
   ]
 }
