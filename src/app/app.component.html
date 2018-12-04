@@ -1,7 +1,41 @@
 <div>
-  <vp-ngx-epic-video-player [url]="videoUrl"></vp-ngx-epic-video-player>
+  <vp-ngx-epic-video-player #player
+                            [url]="videoUrl"
+                            (abortEvent)=onEvent($event)
+                            (canplayEvent)=onEvent($event)
+                            (canplaythroughEvent)=onEvent($event)
+                            (durationchangeEvent)=onEvent($event)
+                            (emptiedEvent)=onEvent($event)
+                            (endedEvent)=onEvent($event)
+                            (errorEvent)=onEvent($event)
+                            (loadeddataEvent)=onEvent($event)
+                            (loadedmetadataEvent)=onEvent($event)
+                            (loadstartEvent)=onEvent($event)
+                            (pauseEvent)=onEvent($event)
+                            (playEvent)=onEvent($event)
+                            (playingEvent)=onEvent($event)
+                            (progressEvent)=onEvent($event)
+                            (ratechangeEvent)=onEvent($event)
+                            (seekedEvent)=onEvent($event)
+                            (seekingEvent)=onEvent($event)
+                            (stalledEvent)=onEvent($event)
+                            (suspendEvent)=onEvent($event)
+                            (timeupdateEvent)=onEvent($event)
+                            (volumechangeEvent)=onEvent($event)
+                            (waitingEvent)=onEvent($event)></vp-ngx-epic-video-player>
 </div>
 
-<button (click)="loadUrl('dash')">Dash video</button>
-<button (click)="loadUrl('hls')">Hls video</button>
+<div style="display: flex; flex-direction: column;">
+  <div>
+    <button (click)="loadUrl('dash')">Dash video</button>
+    <button (click)="loadUrl('hls')">Hls video</button>
+    <button (click)="clearLog()">Clear log</button>
+  </div>
+  <div>
+    <button (click)="pauseVideo()">Pause</button>
+    <button (click)="playVideo()">Play</button>
+  </div>
+</div>
 <p>Now playing: {{ videoUrl }}</p>
+
+<p #log></p>
