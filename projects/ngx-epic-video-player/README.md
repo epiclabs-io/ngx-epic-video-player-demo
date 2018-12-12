@@ -2,7 +2,9 @@
 
 Angular 2+ library to wrap different video libraries (at the moment, [dashjs](https://github.com/Dash-Industry-Forum/dash.js) and [hls.js](https://github.com/video-dev/hls.js)).
 
-NB: This library is in progress and it still lacks a lot of features that are needed to work with video in the real world. You are more than welcome to contribute, ask for features and buy me a beer (not PayPal, just ask me for my postal address and you can directly send me the beer :D).
+To see a **live demo** [click here](https://ngx-epic-video-player-demo.herokuapp.com/).
+
+*NB*: This library is in progress and it still lacks a lot of features that are needed to work with video in the real world. You are more than welcome to contribute, ask for features and buy me a beer (not PayPal, just ask me for my postal address and you can directly send me the beer :D).
 
 # Installation
 
