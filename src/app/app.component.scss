@@ -1,0 +1,46 @@
+button {
+  margin-right: 8px;
+}
+
+.input-url-field {
+  min-width: 300px;
+  width: 50%;
+  margin-right: 16px;
+}
+
+.video-and-log-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+
+  .video-wrapper {
+    width: 70%;
+  }
+
+  .log-wrapper {
+    box-sizing: border-box;
+    width: 30%;
+    margin-left: 2em;
+    flex: 1 0 auto;
+
+    .log {
+      border: 1px solid lightgray;
+      height: calc(100% - 40px);
+      max-height: 760px;
+      overflow-y: scroll;
+      overflow-x: auto;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .clear-log {
+      text-align: right;
+
+      button {
+        margin: 4px 0 0 0;
+      }
+    }
+  }
+}

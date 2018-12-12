@@ -1,41 +1,52 @@
 <div>
-  <vp-ngx-epic-video-player #player
-                            [url]="videoUrl"
-                            (abortEvent)=onEvent($event)
-                            (canplayEvent)=onEvent($event)
-                            (canplaythroughEvent)=onEvent($event)
-                            (durationchangeEvent)=onEvent($event)
-                            (emptiedEvent)=onEvent($event)
-                            (endedEvent)=onEvent($event)
-                            (errorEvent)=onEvent($event)
-                            (loadeddataEvent)=onEvent($event)
-                            (loadedmetadataEvent)=onEvent($event)
-                            (loadstartEvent)=onEvent($event)
-                            (pauseEvent)=onEvent($event)
-                            (playEvent)=onEvent($event)
-                            (playingEvent)=onEvent($event)
-                            (progressEvent)=onEvent($event)
-                            (ratechangeEvent)=onEvent($event)
-                            (seekedEvent)=onEvent($event)
-                            (seekingEvent)=onEvent($event)
-                            (stalledEvent)=onEvent($event)
-                            (suspendEvent)=onEvent($event)
-                            (timeupdateEvent)=onEvent($event)
-                            (volumechangeEvent)=onEvent($event)
-                            (waitingEvent)=onEvent($event)></vp-ngx-epic-video-player>
+  <mat-form-field class="input-url-field">
+    <input matInput placeholder="Video URL" [(ngModel)]="videoUrl">
+  </mat-form-field>
+  <button mat-flat-button color="primary" (click)="loadUrl(videoUrl)">Load</button>
+  <button mat-button color="primary" (click)="loadExample('dash')">Load DASH video</button>
+  <button mat-button color="primary" (click)="loadExample('hls')">Load HLS video</button>
 </div>
 
-<div style="display: flex; flex-direction: column;">
-  <div>
-    <button (click)="loadUrl('dash')">Dash video</button>
-    <button (click)="loadUrl('hls')">Hls video</button>
-    <button (click)="clearLog()">Clear log</button>
+<div class="video-and-log-wrapper">
+  <div class="video-wrapper">
+    <div>
+      <vp-ngx-epic-video-player #player
+                                [url]="videoUrl"
+                                (abortEvent)=onEvent($event)
+                                (canplayEvent)=onEvent($event)
+                                (canplaythroughEvent)=onEvent($event)
+                                (durationchangeEvent)=onEvent($event)
+                                (emptiedEvent)=onEvent($event)
+                                (endedEvent)=onEvent($event)
+                                (errorEvent)=onEvent($event)
+                                (loadeddataEvent)=onEvent($event)
+                                (loadedmetadataEvent)=onEvent($event)
+                                (loadstartEvent)=onEvent($event)
+                                (pauseEvent)=onEvent($event)
+                                (playEvent)=onEvent($event)
+                                (playingEvent)=onEvent($event)
+                                (progressEvent)=onEvent($event)
+                                (ratechangeEvent)=onEvent($event)
+                                (seekedEvent)=onEvent($event)
+                                (seekingEvent)=onEvent($event)
+                                (stalledEvent)=onEvent($event)
+                                (suspendEvent)=onEvent($event)
+                                (timeupdateEvent)=onEvent($event)
+                                (volumechangeEvent)=onEvent($event)
+                                (waitingEvent)=onEvent($event)></vp-ngx-epic-video-player>
+    </div>
+    <div>
+      <div>
+
+      </div>
+      <div>
+        <button mat-flat-button color="primary" (click)="pauseVideo()">Pause</button>
+        <button mat-flat-button color="primary" (click)="playVideo()">Play</button>
+      </div>
+    </div>
   </div>
-  <div>
-    <button (click)="pauseVideo()">Pause</button>
-    <button (click)="playVideo()">Play</button>
+  <div class="log-wrapper">
+    <div class="log"><p #log></p></div>
+    <div class="clear-log"><button mat-flat-button color="warn" (click)="writeLog()">Clear log</button></div>
   </div>
 </div>
-<p>Now playing: {{ videoUrl }}</p>
-
-<p #log></p>

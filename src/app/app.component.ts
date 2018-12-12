@@ -4,22 +4,16 @@ import { NgxEpicVideoPlayerComponent } from '../../projects/ngx-epic-video-playe
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styles: [],
+  styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  videoUrl = undefined;
-
   @ViewChild('log') log: ElementRef;
   @ViewChild('player') player: NgxEpicVideoPlayerComponent;
 
-  loadUrl(type: 'dash' | 'hls') {
-    if (type === 'dash') {
-      this.videoUrl = 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd';
-      this.writeLog('--- Loading ' + this.videoUrl + ' (DASH)');
-    } else {
-      this.videoUrl = 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8';
-      this.writeLog('--- Loading ' + this.videoUrl + ' (HLS)');
-    }
+  videoUrl = 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd';
+
+  loadUrl(videoUrl: string): void {
+    this.videoUrl = videoUrl;
   }
 
   pauseVideo(): void {
@@ -30,20 +24,28 @@ export class AppComponent {
     this.player.play();
   }
 
-  clearLog(): void {
-    (this.log.nativeElement as HTMLParagraphElement).innerHTML = '';
-  }
-
   onEvent(e: any): void {
     this.writeLog(JSON.stringify(e));
+  }
 
-    if (e === 'canplay') {
-      this.player.play();
+  loadExample(type: string): void {
+    switch (type) {
+      case 'dash':
+        this.videoUrl = 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd';
+        break;
+      case 'hls':
+        this.videoUrl = 'https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8';
+        break;
+      default:
     }
   }
 
-  private writeLog(log: string): void {
-    const logContent = (this.log.nativeElement as HTMLParagraphElement).innerHTML;
-    (this.log.nativeElement as HTMLParagraphElement).innerHTML = log + '<br>' + logContent;
+  writeLog(log?: string): void {
+    if (log === undefined) {
+      (this.log.nativeElement as HTMLParagraphElement).innerHTML = '';
+    } else {
+      const logContent = (this.log.nativeElement as HTMLParagraphElement).innerHTML;
+      (this.log.nativeElement as HTMLParagraphElement).innerHTML = log + '<br>' + logContent;
+    }
   }
 }

@@ -23,7 +23,7 @@
       ],
       "ngx-epic-video-player/*": [
         "dist/ngx-epic-video-player/*"
-      ]
+      ],
     }
   }
 }

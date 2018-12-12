@@ -14,9 +14,7 @@ NB: This library is in progress and it still lacks a lot of features that are ne
 2. Import the ```NgxEpicVideoPlayerModule``` in the module in which you will use it (e.g., ```app.module.ts```):
     ```
     import { NgxEpicVideoPlayerModule } from 'ngx-epic-video-player';
-    ```
-    and
-    ```
+    
     @NgModule({
       ...
       imports: [
@@ -54,6 +52,10 @@ NB: This library is in progress and it still lacks a lot of features that are ne
 
 ## Properties
 
+- **url**
+
+  The URL of the video to be loaded.
+
 ## Methods
 
 - **pause()**
@@ -83,3 +85,27 @@ NB: This library is in progress and it still lacks a lot of features that are ne
     For negative numbers the video will be played backwards.
     
     If not parameters are provided it will return the current playback rate.
+
+## Event emitters
+
+- **abortEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **canplayEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **canplaythroughEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **durationchangeEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **emptiedEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **endedEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **errorEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **loadeddataEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **loadedmetadataEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **loadstartEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **playEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **playingEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **progressEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **ratechangeEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **seekedEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **seekingEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **stalledEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **suspendEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **timeupdateEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **volumechangeEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)
+- **waitingEvent** as defined by [W3C](https://www.w3.org/TR/2011/WD-html5-20110113/video.html#mediaevents)

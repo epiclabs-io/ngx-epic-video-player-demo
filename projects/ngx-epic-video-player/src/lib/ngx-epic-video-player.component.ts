@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MediaPlayer, MediaPlayerClass } from 'dashjs';
 import * as Hls from 'hls.js';
 
@@ -17,13 +17,12 @@ export interface IEvent {
   templateUrl: './ngx-epic-video-player.component.html',
   styleUrls: ['./ngx-epic-video-player.component.scss']
 })
-export class NgxEpicVideoPlayerComponent implements OnInit, OnDestroy {
+export class NgxEpicVideoPlayerComponent implements OnDestroy {
 
   @ViewChild('player') playerDomElement: ElementRef<HTMLVideoElement>;
 
   player: MediaPlayerClass | Hls;
   playerType: PlayerType;
-  autoPlay = true;
 
   /**
    * Regular HTML video event emitters
@@ -51,12 +50,18 @@ export class NgxEpicVideoPlayerComponent implements OnInit, OnDestroy {
   @Output() volumechangeEvent: EventEmitter<IEvent> = new EventEmitter<IEvent>();
   @Output() waitingEvent: EventEmitter<IEvent> = new EventEmitter<IEvent>();
 
-
   url: string;
   @Input('url')
   set setUrl(value: string) {
     if (this.url !== value) {
+      this.destroyPlayer();
       this.url = value;
+
+      if (value === undefined || value === '') {
+        this.errorEvent.emit({type: 'error', 'data': { mssg: 'Provided video URL is empty.'}});
+        return;
+      }
+
       this.loadPlayer();
     }
   }
@@ -70,7 +75,7 @@ export class NgxEpicVideoPlayerComponent implements OnInit, OnDestroy {
   durationchangeListener =  () => this.durationchangeEvent.emit({type: 'durationchange'});
   emptiedListener =         () => this.emptiedEvent.emit({type: 'emptied'});
   endedListener =           () => this.endedEvent.emit({type: 'ended'});
-  errorListener =           () => this.errorEvent.emit({type: 'error'});
+  errorListener =           (e) => this.errorEvent.emit({type: 'error', data: e});
   loadeddataListener =      () => this.loadeddataEvent.emit({type: 'loadeddata'});
   loadedmetadataListener =  () => this.loadedmetadataEvent.emit({type: 'loadedmetadata'});
   loadstartListener =       () => this.loadstartEvent.emit({type: 'loadstart'});
@@ -86,10 +91,6 @@ export class NgxEpicVideoPlayerComponent implements OnInit, OnDestroy {
   timeupdateListener =      () => this.timeupdateEvent.emit({type: 'timeupdate', data: {currentTime: this.currentTime()}});
   volumechangeListener =    () => this.volumechangeEvent.emit({type: 'volumechange', data: {volume: this.volume()}});
   waitingListener =         () => this.waitingEvent.emit({type: 'waiting'});
-
-  constructor() { }
-
-  ngOnInit() { }
 
   ngOnDestroy() {
     this.destroyPlayer();
