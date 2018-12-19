@@ -4,8 +4,23 @@ This document will track the changes of this project, based on [Keep a Changelog
 
 ## Wanted features / Roadmap
 - Expose player options and events from dashjs and hls.js.
-- Add properties to show/hide the video controls, mute/unmute the audio and enable/disabled the automatic playback.
 - Add Youtube compatibility (most probably through [ngx-youtube-player](https://github.com/orizens/ngx-youtube-player)).
+
+## [1.0.0]
+### [Changed]
+- Created a class structure to manage the player types and keep things clean and ordered.
+- Property `id` renamed to `videoId` to avoid conflicts due to repeated ids.
+### [Added]
+- Inner HTML `<video>` element has been exposed.
+
+## [0.0.7]
+### Added
+- Included the following properties to be applied over the HTML video element:
+  - `id`
+  - `autoplay`
+  - `controls`
+  - `loop`
+  - `muted`
 
 ## [0.0.4]
 ### Added

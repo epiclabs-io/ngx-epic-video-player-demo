@@ -1,10 +1,12 @@
 {
   "name": "ngx-epic-video-player-demo",
   "description": "Video Player wrapper to support different video sources (Dash, Hls, etc.).",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run build:lib && ng serve",
+    "build:lib": "ng build ngx-epic-video-player",
+    "build:all": "npm run build:lib && npm run build",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

@@ -1,11 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { MediaPlayer, MediaPlayerClass } from 'dashjs';
-import * as Hls from 'hls.js';
-
-enum PlayerType {
-  DASH,
-  HLS,
-}
+import { Player, PlayerClassType } from './Player';
+import { PlayerDash } from './PlayerDash';
+import { PlayerHls } from './PlayerHls';
 
 export interface IEvent {
   type: string;
@@ -19,10 +15,41 @@ export interface IEvent {
 })
 export class NgxEpicVideoPlayerComponent implements OnDestroy {
 
-  @ViewChild('player') playerDomElement: ElementRef<HTMLVideoElement>;
+  @ViewChild('htmlVideoRef') htmlVideoRef: any; // Correct type (ElementRef<HTMLVideoElement>) causes a compilation warning;
 
-  player: MediaPlayerClass | Hls;
-  playerType: PlayerType;
+  url: string;
+  @Input('url')
+  set setUrl(value: string) {
+    if (this.url !== value) {
+      this.destroy();
+      this.url = value;
+
+      if (value === undefined || value === '') {
+        this.errorEvent.emit({type: 'error', 'data': { mssg: 'Provided video URL is empty.'}});
+        return;
+      }
+
+      this.init();
+    }
+  }
+
+  @Input() videoId: string;
+  @Input() autoplay: boolean;
+  @Input() controls: boolean;
+  @Input() loop: boolean;
+
+  muted: boolean;
+  @Input('muted')
+  set setMuted(value: boolean) {
+    this.muted = value;
+    if (this.isTrue(this.muted)) {
+      this.volume(0);
+    } else {
+      this.volume(1);
+    }
+  }
+
+  player: Player<PlayerClassType>;
 
   /**
    * Regular HTML video event emitters
@@ -50,195 +77,144 @@ export class NgxEpicVideoPlayerComponent implements OnDestroy {
   @Output() volumechangeEvent: EventEmitter<IEvent> = new EventEmitter<IEvent>();
   @Output() waitingEvent: EventEmitter<IEvent> = new EventEmitter<IEvent>();
 
-  url: string;
-  @Input('url')
-  set setUrl(value: string) {
-    if (this.url !== value) {
-      this.destroyPlayer();
-      this.url = value;
+  /**
+   * Regular HTML video event listeners
+   */
+  abortListener =           (e) => this.abortEvent.emit({type: 'abort'});
+  canplayListener =         (e) => this.canplayEvent.emit({type: 'canplay'});
+  canplaythroughListener =  (e) => this.canplaythroughEvent.emit({type: 'canplaythrough'});
+  durationchangeListener =  (e) => this.durationchangeEvent.emit({type: 'durationchange'});
+  emptiedListener =         (e) => this.emptiedEvent.emit({type: 'emptied'});
+  endedListener =           (e) => this.endedEvent.emit({type: 'ended'});
+  errorListener =           (e) => this.errorEvent.emit({type: 'error', data: e});
+  loadeddataListener =      (e) => this.loadeddataEvent.emit({type: 'loadeddata'});
+  loadedmetadataListener =  (e) => this.loadedmetadataEvent.emit({type: 'loadedmetadata'});
+  loadstartListener =       (e) => this.loadstartEvent.emit({type: 'loadstart'});
+  pauseListener =           (e) => this.pauseEvent.emit({type: 'pause'});
+  playListener =            (e) => this.playEvent.emit({type: 'play'});
+  playingListener =         (e) => this.playingEvent.emit({type: 'playing'});
+  progressListener =        (e) => this.progressEvent.emit({type: 'progress'});
+  ratechangeListener =      (e) => this.ratechangeEvent.emit({type: 'ratechange', data: {playbackRate: this.playbackRate()}});
+  seekedListener =          (e) => this.seekedEvent.emit({type: 'seeked'});
+  seekingListener =         (e) => this.seekingEvent.emit({type: 'seeking'});
+  stalledListener =         (e) => this.stalledEvent.emit({type: 'stalled'});
+  suspendListener =         (e) => this.suspendEvent.emit({type: 'suspend'});
+  timeupdateListener =      (e) => this.timeupdateEvent.emit({type: 'timeupdate', data: {currentTime: this.currentTime()}});
+  volumechangeListener =    (e) => this.volumechangeEvent.emit({type: 'volumechange', data: {volume: this.volume()}});
+  waitingListener =         (e) => this.waitingEvent.emit({type: 'waiting'});
 
-      if (value === undefined || value === '') {
-        this.errorEvent.emit({type: 'error', 'data': { mssg: 'Provided video URL is empty.'}});
-        return;
-      }
+  ngOnDestroy() {
+    this.destroy();
+  }
 
-      this.loadPlayer();
+  isTrue(value: boolean | string): boolean {
+    return value === true || value === 'true';
+  }
+
+  getHtmlVideo(): HTMLVideoElement {
+    return this.htmlVideoRef.nativeElement;
+  }
+
+  private init(): void {
+    try {
+      this.destroy();
+      this.createPlayer();
+      this.getHtmlVideo().addEventListener('abort', this.abortListener);
+      this.getHtmlVideo().addEventListener('canplay', this.canplayListener);
+      this.getHtmlVideo().addEventListener('canplaythrough', this.canplaythroughListener);
+      this.getHtmlVideo().addEventListener('durationchange', this.durationchangeListener);
+      this.getHtmlVideo().addEventListener('emptied', this.emptiedListener);
+      this.getHtmlVideo().addEventListener('ended', this.endedListener);
+      this.getHtmlVideo().addEventListener('error', this.errorListener);
+      this.getHtmlVideo().addEventListener('loadeddata', this.loadeddataListener);
+      this.getHtmlVideo().addEventListener('loadedmetadata', this.loadedmetadataListener);
+      this.getHtmlVideo().addEventListener('loadstart', this.loadstartListener);
+      this.getHtmlVideo().addEventListener('pause', this.pauseListener);
+      this.getHtmlVideo().addEventListener('play', this.playListener);
+      this.getHtmlVideo().addEventListener('playing', this.playingListener);
+      this.getHtmlVideo().addEventListener('progress', this.progressListener);
+      this.getHtmlVideo().addEventListener('ratechange', this.ratechangeListener);
+      this.getHtmlVideo().addEventListener('seeked', this.seekedListener);
+      this.getHtmlVideo().addEventListener('seeking', this.seekingListener);
+      this.getHtmlVideo().addEventListener('stalled', this.stalledListener);
+      this.getHtmlVideo().addEventListener('suspend', this.suspendListener);
+      this.getHtmlVideo().addEventListener('timeupdate', this.timeupdateListener);
+      this.getHtmlVideo().addEventListener('volumechange', this.volumechangeListener);
+      this.getHtmlVideo().addEventListener('waiting', this.waitingListener);
+    } catch (e) {
+      console.error(e);
     }
   }
 
-  /**
-   * video
-   */
-  abortListener =           () => this.abortEvent.emit({type: 'abort'});
-  canplayListener =         () => this.canplayEvent.emit({type: 'canplay'});
-  canplaythroughListener =  () => this.canplaythroughEvent.emit({type: 'canplaythrough'});
-  durationchangeListener =  () => this.durationchangeEvent.emit({type: 'durationchange'});
-  emptiedListener =         () => this.emptiedEvent.emit({type: 'emptied'});
-  endedListener =           () => this.endedEvent.emit({type: 'ended'});
-  errorListener =           (e) => this.errorEvent.emit({type: 'error', data: e});
-  loadeddataListener =      () => this.loadeddataEvent.emit({type: 'loadeddata'});
-  loadedmetadataListener =  () => this.loadedmetadataEvent.emit({type: 'loadedmetadata'});
-  loadstartListener =       () => this.loadstartEvent.emit({type: 'loadstart'});
-  pauseListener =           () => this.pauseEvent.emit({type: 'pause'});
-  playListener =            () => this.playEvent.emit({type: 'play'});
-  playingListener =         () => this.playingEvent.emit({type: 'playing'});
-  progressListener =        () => this.progressEvent.emit({type: 'progress'});
-  ratechangeListener =      () => this.ratechangeEvent.emit({type: 'ratechange', data: {playbackRate: this.playbackRate()}});
-  seekedListener =          () => this.seekedEvent.emit({type: 'seeked'});
-  seekingListener =         () => this.seekingEvent.emit({type: 'seeking'});
-  stalledListener =         () => this.stalledEvent.emit({type: 'stalled'});
-  suspendListener =         () => this.suspendEvent.emit({type: 'suspend'});
-  timeupdateListener =      () => this.timeupdateEvent.emit({type: 'timeupdate', data: {currentTime: this.currentTime()}});
-  volumechangeListener =    () => this.volumechangeEvent.emit({type: 'volumechange', data: {volume: this.volume()}});
-  waitingListener =         () => this.waitingEvent.emit({type: 'waiting'});
+  private createPlayer(): void {
+    const filename = this.url.substr(this.url.lastIndexOf('/') + 1);
+    const extension = filename.split('.').pop();
 
-  ngOnDestroy() {
-    this.destroyPlayer();
+    if (extension === 'm3u8') {
+      this.player = new PlayerHls(this.url, this.getHtmlVideo());
+    } else {
+      this.player = new PlayerDash(this.url, this.getHtmlVideo());
+    }
+  }
+
+  private destroy(): void {
+    this.getHtmlVideo().removeEventListener('abort', this.abortListener);
+    this.getHtmlVideo().removeEventListener('canplay', this.canplayListener);
+    this.getHtmlVideo().removeEventListener('canplaythrough', this.canplaythroughListener);
+    this.getHtmlVideo().removeEventListener('durationchange', this.durationchangeListener);
+    this.getHtmlVideo().removeEventListener('emptied', this.emptiedListener);
+    this.getHtmlVideo().removeEventListener('ended', this.endedListener);
+    this.getHtmlVideo().removeEventListener('error', this.errorListener);
+    this.getHtmlVideo().removeEventListener('loadeddata', this.loadeddataListener);
+    this.getHtmlVideo().removeEventListener('loadedmetadata', this.loadedmetadataListener);
+    this.getHtmlVideo().removeEventListener('loadstart', this.loadstartListener);
+    this.getHtmlVideo().removeEventListener('pause', this.pauseListener);
+    this.getHtmlVideo().removeEventListener('play', this.playListener);
+    this.getHtmlVideo().removeEventListener('playing', this.playingListener);
+    this.getHtmlVideo().removeEventListener('progress', this.progressListener);
+    this.getHtmlVideo().removeEventListener('ratechange', this.ratechangeListener);
+    this.getHtmlVideo().removeEventListener('seeked', this.seekedListener);
+    this.getHtmlVideo().removeEventListener('seeking', this.seekingListener);
+    this.getHtmlVideo().removeEventListener('stalled', this.stalledListener);
+    this.getHtmlVideo().removeEventListener('suspend', this.suspendListener);
+    this.getHtmlVideo().removeEventListener('timeupdate', this.timeupdateListener);
+    this.getHtmlVideo().removeEventListener('volumechange', this.volumechangeListener);
+    this.getHtmlVideo().removeEventListener('waiting', this.waitingListener);
+
+    if (this.player) {
+      this.player.destroy();
+    }
   }
 
   pause() {
-    this.playerDomElement.nativeElement.pause();
+    this.getHtmlVideo().pause();
   }
 
   play() {
-    this.playerDomElement.nativeElement.play();
+    this.getHtmlVideo().play();
   }
 
   currentTime(secs?: number): void | number {
     if (secs !== undefined) {
-      (this.playerDomElement.nativeElement as HTMLVideoElement).currentTime = secs;
+      this.getHtmlVideo().currentTime = secs;
     } else {
-      return (this.playerDomElement.nativeElement as HTMLVideoElement).currentTime;
+      return this.getHtmlVideo().currentTime;
     }
   }
 
   volume(perc?: number): void | number {
     if (perc !== undefined) {
-      (this.playerDomElement.nativeElement as HTMLVideoElement).volume = perc;
+      this.getHtmlVideo().volume = perc;
     } else {
-      return (this.playerDomElement.nativeElement as HTMLVideoElement).volume;
+      return this.getHtmlVideo().volume;
     }
   }
 
   playbackRate(rate?: number): void | number {
     if (rate !== undefined) {
-      (this.playerDomElement.nativeElement as HTMLVideoElement).playbackRate = rate;
+      this.getHtmlVideo().playbackRate = rate;
     } else {
-      return (this.playerDomElement.nativeElement as HTMLVideoElement).playbackRate;
-    }
-  }
-
-  private loadPlayer() {
-    try {
-      this.destroyPlayer();
-      const filename = this.url.substr(this.url.lastIndexOf('/') + 1);
-      const extension = filename.split('.').pop();
-      if (extension === 'm3u8') {
-        this.loadHlsPlayer();
-      } else {
-        this.loadDashPlayer();
-      }
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('abort', this.abortListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('canplay', this.canplayListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('canplaythrough', this.canplaythroughListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('durationchange', this.durationchangeListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('emptied', this.emptiedListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('ended', this.endedListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('error', this.errorListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('loadeddata', this.loadeddataListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('loadedmetadata', this.loadedmetadataListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('loadstart', this.loadstartListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('pause', this.pauseListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('play', this.playListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('playing', this.playingListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('progress', this.progressListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('ratechange', this.ratechangeListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('seeked', this.seekedListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('seeking', this.seekingListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('stalled', this.stalledListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('suspend', this.suspendListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('timeupdate', this.timeupdateListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('volumechange', this.volumechangeListener);
-      (this.playerDomElement.nativeElement as HTMLVideoElement).addEventListener('waiting', this.waitingListener);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  private destroyPlayer() {
-    switch (this.playerType) {
-      case PlayerType.DASH:
-        return this.destroyDashPlayer();
-      case PlayerType.HLS:
-        return this.destroyHlsPlayer();
-      default:
-        return;
-    }
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('abort', this.abortListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('canplay', this.canplayListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('canplaythrough', this.canplaythroughListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('durationchange', this.durationchangeListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('emptied', this.emptiedListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('ended', this.endedListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('error', this.errorListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('loadeddata', this.loadeddataListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('loadedmetadata', this.loadedmetadataListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('loadstart', this.loadstartListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('pause', this.pauseListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('play', this.playListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('playing', this.playingListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('progress', this.progressListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('ratechange', this.ratechangeListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('seeked', this.seekedListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('seeking', this.seekingListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('stalled', this.stalledListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('suspend', this.suspendListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('timeupdate', this.timeupdateListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('volumechange', this.volumechangeListener);
-    (this.playerDomElement.nativeElement as HTMLVideoElement).removeEventListener('waiting', this.waitingListener);
-  }
-
-  private loadDashPlayer() {
-    try {
-      this.player = MediaPlayer().create();
-      this.player.getDebug().setLogToBrowserConsole(false);
-      this.player.initialize(this.playerDomElement.nativeElement, this.url, false);
-      this.playerType = PlayerType.DASH;
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  private destroyDashPlayer() {
-    try {
-      this.player.reset();
-      this.playerType = undefined;
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  private loadHlsPlayer() {
-    try {
-      if (Hls.isSupported()) {
-        this.player = new Hls();
-        this.player.loadSource(this.url);
-        this.player.attachMedia(this.playerDomElement.nativeElement);
-      } else if (this.playerDomElement.nativeElement.canPlayType('application/vnd.apple.mpegurl')) {
-        this.playerDomElement.nativeElement.src = 'this.url';
-      }
-      this.playerType = PlayerType.HLS;
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  private destroyHlsPlayer() {
-    try {
-      this.player.destroy();
-      this.playerType = undefined;
-    } catch (e) {
-      console.error(e);
+      return this.getHtmlVideo().playbackRate;
     }
   }
 }

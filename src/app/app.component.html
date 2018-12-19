@@ -2,15 +2,19 @@
   <mat-form-field class="input-url-field">
     <input matInput placeholder="Video URL" [(ngModel)]="videoUrl">
   </mat-form-field>
-  <button mat-flat-button color="primary" (click)="loadUrl(videoUrl)">Load</button>
-  <button mat-button color="primary" (click)="loadExample('dash')">Load DASH video</button>
-  <button mat-button color="primary" (click)="loadExample('hls')">Load HLS video</button>
+  <button mat-flat-button color="primary" color="primary" (click)="loadExample('dash')">Load DASH example</button>
+  <button mat-flat-button color="primary" color="primary" (click)="loadExample('hls')">Load HLS example</button>
 </div>
 
 <div class="video-and-log-wrapper">
   <div class="video-wrapper">
     <div>
       <vp-ngx-epic-video-player #player
+                                [autoplay]="autoplay"
+                                [controls]="controls"
+                                [videoId]="'my-player'"
+                                [muted]="muted"
+                                [loop]="loop"
                                 [url]="videoUrl"
                                 (abortEvent)=onEvent($event)
                                 (canplayEvent)=onEvent($event)
@@ -38,6 +42,12 @@
     <div>
       <div>
 
+      </div>
+      <div class="video-properties">
+        <mat-checkbox [(ngModel)]="autoplay">Autoplay</mat-checkbox>
+        <mat-checkbox [(ngModel)]="controls">Controls</mat-checkbox>
+        <mat-checkbox [(ngModel)]="muted">Muted</mat-checkbox>
+        <mat-checkbox [(ngModel)]="loop">Loop</mat-checkbox>
       </div>
       <div>
         <button mat-flat-button color="primary" (click)="pauseVideo()">Pause</button>

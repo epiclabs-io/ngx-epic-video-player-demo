@@ -8,20 +8,20 @@ import { NgxEpicVideoPlayerComponent } from '../../projects/ngx-epic-video-playe
 })
 export class AppComponent {
   @ViewChild('log') log: ElementRef;
-  @ViewChild('player') player: NgxEpicVideoPlayerComponent;
+  @ViewChild('player') evp: NgxEpicVideoPlayerComponent;
 
   videoUrl = 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd';
-
-  loadUrl(videoUrl: string): void {
-    this.videoUrl = videoUrl;
-  }
+  autoplay = true;
+  controls = false;
+  muted = true;
+  loop = false;
 
   pauseVideo(): void {
-    this.player.pause();
+    this.evp.pause();
   }
 
   playVideo(): void {
-    this.player.play();
+    this.evp.play();
   }
 
   onEvent(e: any): void {

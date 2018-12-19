@@ -2,7 +2,11 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/ngx-epic-video-player",
   "lib": {
-    "entryFile": "src/public_api.ts"
+    "entryFile": "src/public_api.ts",
+    "umdModuleIds": {
+      "dashjs": "~2.9.2",
+      "hls.js": "~0.11.0"
+    }
   },
   "whitelistedNonPeerDependencies": [
     "dashjs",

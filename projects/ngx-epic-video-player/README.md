@@ -30,63 +30,81 @@ To see a **live demo** [click here](https://ngx-epic-video-player-demo.herokuapp
 3. Make use of it in one of the components living under the module in which you imported the library:
 
     ```
-    <vp-ngx-epic-video-player #player
+    <vp-ngx-epic-video-player #evp [videoId]="'my-own-id'"
       url="https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd">
     </vp-ngx-epic-video-player>
     ```
 
-4. Access to the component properties and methods through an Angular reference variable
+4. Access to the component properties and methods through an Angular reference variable:
 
     ```
-    @ViewChild('player') player: NgxEpicVideoPlayerComponent;
+    @ViewChild('evp') evp: NgxEpicVideoPlayerComponent;
     
     ...
 
-    this.player.pause();
-    console.log(this.player.volume());
-    this.player.playbackRate(0.5)
-    this.player.play();
+    this.evp.pause();
+    console.log(this.evp.volume());
+    this.evp.playbackRate(0.5)
+    this.evp.play();
     
     ...
+    ```
+    
+ 5. The HTML ```<video>``` element has been also exposed, so you can operate directly against it:
+ 
+    ```
+    this.evp.getHtmlVideo().play();
+    
+    ```
+    
+    You can also do this if you set your own id with the 'videoId' property:
+    ```
+    document.getElementById('my-own-id').play();
+        
     ```
 
 # API
 
 ## Properties
 
-- **url**
-
-  The URL of the video to be loaded.
+| Property      | Type              | Default value | Description                                                                                                              |
+|---------------|-------------------|---------------|--------------------------------------------------------------------------------------------------------------------------|
+| **autoplay**  | boolean or string | undefined     | Whether or not the video should start playing as soon as it is loaded.                                                   |
+| **controls**  | boolean or string | undefined     | Whether or not the video should show the controls like play, pause, etc.                                                 |
+| **videoId**   | string            | undefined     | Id to be set to the inner HTML video element.                                                                            |
+| **loop**      | boolean or string | undefined     | Whether or not the video should start over again when finished.                                                          |
+| **muted**     | boolean or string | undefined     | Whether or not the audio should be muted. It sets the muted property to the video element, but also set the volume to 0. |
+| **url**       | boolean or string | undefined     | The URL of the manifest for the video to be loaded.                                                                      |
 
 ## Methods
 
 - **pause()**
 
-    Pauses the video playback.
+  Pauses the video playback.
 
 - **play()**
   
-    Begins playback of the video.
+  Begins playback of the video.
 
 - **currentTime(secs?: number)**
 
-    It can receive a double indicating the number of seconds, in which case it will seek the video to the new time.
+  It can receive a double indicating the number of seconds, in which case it will seek the video to the new time.
     
-    If not parameters are provided it will return the current playback time in seconds.
+  If not parameters are provided it will return the current playback time in seconds.
 
 - **volume(perc?: number)**
 
-    It can receive a double (from 0.0 to 1.0) indicating the level of the volume, in which case it will set the volume to the new level.
+  It can receive a double (from 0.0 to 1.0) indicating the level of the volume, in which case it will set the volume to the new level.
     
-    If not parameters are provided, it will return the current volume level.
+  If not parameters are provided, it will return the current volume level.
 
 - **playbackRate(rate?: number)**
 
-    It can receive a double indicating the rate at which the video will be played back (1.0 by default).
+  It can receive a double indicating the rate at which the video will be played back (1.0 by default).
     
-    For negative numbers the video will be played backwards.
-    
-    If not parameters are provided it will return the current playback rate.
+  For negative numbers the video will be played backwards.
+   
+  If not parameters are provided it will return the current playback rate.
 
 ## Event emitters
 
