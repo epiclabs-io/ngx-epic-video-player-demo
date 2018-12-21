@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NgxEpicVideoPlayerComponent } from '../../projects/ngx-epic-video-player/src/lib/ngx-epic-video-player.component';
+import { IRendition, IStats } from 'projects/ngx-epic-video-player/src/lib/Player';
 
 @Component({
   selector: 'app-root',
@@ -8,13 +9,19 @@ import { NgxEpicVideoPlayerComponent } from '../../projects/ngx-epic-video-playe
 })
 export class AppComponent {
   @ViewChild('log') log: ElementRef;
-  @ViewChild('player') evp: NgxEpicVideoPlayerComponent;
+  @ViewChild('evp') evp: NgxEpicVideoPlayerComponent;
 
   videoUrl = 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd';
   autoplay = true;
   controls = false;
   muted = true;
   loop = false;
+
+  stats: IStats;
+  renditions: IRendition[];
+  currentRendition: IRendition;
+  desiredRendition = -1;
+  autoRendition = -1;
 
   pauseVideo(): void {
     this.evp.pause();
@@ -24,11 +31,33 @@ export class AppComponent {
     this.evp.play();
   }
 
+  onVideoUrlChange(newValue: string): void {
+    this.desiredRendition = this.autoRendition;
+  }
+
   onEvent(e: any): void {
     this.writeLog(JSON.stringify(e));
+
+    switch (e.type) {
+      case 'timeupdate':
+        this.stats = this.evp.getStats();
+        this.currentRendition = this.evp.getCurrentRendition();
+        return;
+      case 'canplay':
+        this.renditions = this.evp.getRenditions();
+        return;
+      default:
+    }
+  }
+
+  onSelectedRenditionChange(): void {
+    if (this.desiredRendition !== undefined) {
+      this.evp.setRendition(this.renditions[this.desiredRendition]);
+    }
   }
 
   loadExample(type: string): void {
+    this.desiredRendition = this.autoRendition;
     switch (type) {
       case 'dash':
         this.videoUrl = 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd';

@@ -1,5 +1,5 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import { Player, PlayerClassType } from './Player';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { IRendition, IStats, Player, PlayerClassType } from './Player';
 import { PlayerDash } from './PlayerDash';
 import { PlayerHls } from './PlayerHls';
 
@@ -33,21 +33,26 @@ export class NgxEpicVideoPlayerComponent implements OnDestroy {
     }
   }
 
-  @Input() videoId: string;
-  @Input() autoplay: boolean;
-  @Input() controls: boolean;
-  @Input() loop: boolean;
+  autoplay: boolean;
+  @Input('autoplay')
+  set setAutoplay(value: boolean) {
+    this.autoplay = this.isTrue(value);
+  }
 
   muted: boolean;
   @Input('muted')
-  set setMuted(value: boolean) {
-    this.muted = value;
-    if (this.isTrue(this.muted)) {
+  set setMuted(value: boolean | string) {
+    this.muted = this.isTrue(value);
+    if (this.muted) {
       this.volume(0);
     } else {
       this.volume(1);
     }
   }
+
+  @Input() videoId: string;
+  @Input() controls: boolean;
+  @Input() loop: boolean;
 
   player: Player<PlayerClassType>;
 
@@ -82,7 +87,10 @@ export class NgxEpicVideoPlayerComponent implements OnDestroy {
    */
   abortListener =           (e) => this.abortEvent.emit({type: 'abort'});
   canplayListener =         (e) => this.canplayEvent.emit({type: 'canplay'});
-  canplaythroughListener =  (e) => this.canplaythroughEvent.emit({type: 'canplaythrough'});
+  canplaythroughListener =  (e) => {
+    this.canplaythroughEvent.emit({type: 'canplaythrough'});
+    if (this.autoplay && this.getHtmlVideo().paused) { this.play(); }
+  }
   durationchangeListener =  (e) => this.durationchangeEvent.emit({type: 'durationchange'});
   emptiedListener =         (e) => this.emptiedEvent.emit({type: 'emptied'});
   endedListener =           (e) => this.endedEvent.emit({type: 'ended'});
@@ -111,8 +119,24 @@ export class NgxEpicVideoPlayerComponent implements OnDestroy {
     return value === true || value === 'true';
   }
 
+  getStats(): IStats {
+    return this.player.getStats();
+  }
+
   getHtmlVideo(): HTMLVideoElement {
     return this.htmlVideoRef.nativeElement;
+  }
+
+  getRenditions(): IRendition[] {
+    return this.player.getRenditions();
+  }
+
+  getCurrentRendition(): IRendition {
+    return this.player.getCurrentRendition();
+  }
+
+  setRendition(rendition: IRendition | number): void {
+    return this.player.setRendition(rendition);
   }
 
   private init(): void {

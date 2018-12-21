@@ -46,10 +46,29 @@ button {
 }
 
 .video-properties {
-
   margin: 1em 0;
 
   mat-checkbox {
     margin-right: 1em;
+  }
+}
+
+.video-actions,
+.video-stats,
+.renditions {
+  display: grid;
+  grid-template: 1fr / 1fr 1fr;
+  grid-column-gap: 1em;
+}
+
+.video-stats {
+  margin-top: 1em;
+  padding: .5em;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+
+  p {
+    margin-top: 0;
+    font-weight: 800;
   }
 }

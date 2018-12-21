@@ -1,6 +1,6 @@
 <div>
   <mat-form-field class="input-url-field">
-    <input matInput placeholder="Video URL" [(ngModel)]="videoUrl">
+    <input matInput placeholder="Video URL" [ngModel]="videoUrl" (ngModelChange)="onVideoUrlChange($event)">
   </mat-form-field>
   <button mat-flat-button color="primary" color="primary" (click)="loadExample('dash')">Load DASH example</button>
   <button mat-flat-button color="primary" color="primary" (click)="loadExample('hls')">Load HLS example</button>
@@ -9,7 +9,7 @@
 <div class="video-and-log-wrapper">
   <div class="video-wrapper">
     <div>
-      <vp-ngx-epic-video-player #player
+      <vp-ngx-epic-video-player #evp
                                 [autoplay]="autoplay"
                                 [controls]="controls"
                                 [videoId]="'my-player'"
@@ -40,18 +40,40 @@
                                 (waitingEvent)=onEvent($event)></vp-ngx-epic-video-player>
     </div>
     <div>
-      <div>
-
-      </div>
       <div class="video-properties">
         <mat-checkbox [(ngModel)]="autoplay">Autoplay</mat-checkbox>
         <mat-checkbox [(ngModel)]="controls">Controls</mat-checkbox>
         <mat-checkbox [(ngModel)]="muted">Muted</mat-checkbox>
         <mat-checkbox [(ngModel)]="loop">Loop</mat-checkbox>
       </div>
-      <div>
-        <button mat-flat-button color="primary" (click)="pauseVideo()">Pause</button>
-        <button mat-flat-button color="primary" (click)="playVideo()">Play</button>
+      <div class="video-actions">
+        <div>
+          <button mat-flat-button color="primary" (click)="pauseVideo()">Pause</button>
+          <button mat-flat-button color="primary" (click)="playVideo()">Play</button>
+        </div>
+        <div *ngIf="currentRendition" class="renditions">
+          <mat-form-field>
+            <input matInput placeholder="Current rendition" value="{{ currentRendition.width }} x {{ currentRendition.height }} ({{ currentRendition.bitrate / 1000 }}kbps)">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select placeholder="Desired rendition" [(value)]="desiredRendition" (selectionChange)="onSelectedRenditionChange()">
+              <mat-option [value]="autoRendition">Auto</mat-option>
+              <mat-option *ngFor="let rendition of renditions; index as i" [value]="i">
+                {{ rendition.width }} x {{ rendition.height }} ({{ rendition.bitrate / 1000 }}kbps)
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="video-stats">
+        <div>
+          <p>Stats:</p>
+          <pre>{{ stats | json }}</pre>
+        </div>
+        <div>
+          <p>Renditions:</p>
+          <pre>{{ renditions | json }}</pre>
+        </div>
       </div>
     </div>
   </div>

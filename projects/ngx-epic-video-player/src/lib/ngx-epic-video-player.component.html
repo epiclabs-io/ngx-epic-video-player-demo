@@ -1,6 +1,6 @@
 <video #htmlVideoRef
-       [attr.autoplay]="isTrue(autoplay) ? true : undefined"
+       [attr.autoplay]="autoplay ? true : undefined"
        [attr.id]="videoId ? videoId : undefined"
        [attr.controls]="isTrue(controls) ? true : undefined"
        [attr.loop]="isTrue(loop) ? true : undefined"
-       [attr.muted]="isTrue(muted) ? true : undefined"></video>
+       [attr.muted]="muted ? true : undefined"></video>

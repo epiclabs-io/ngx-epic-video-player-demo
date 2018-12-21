@@ -105,6 +105,32 @@ To see a **live demo** [click here](https://ngx-epic-video-player-demo.herokuapp
   For negative numbers the video will be played backwards.
    
   If not parameters are provided it will return the current playback rate.
+  
+- **getStats()**
+
+  Returns video stats in a IStats.
+  
+- **getRenditions()**
+  
+  Returns the renditions of the video as an array of IRendition.
+
+- **setRendition(rendition: IRendition | number)**
+
+  Set the desired rendition. It will not drop the already buffered segments.
+  
+  If the parameter is the number -1, the rendition selection will be set to automatic.
+
+- **getCurrentRendition()**
+
+  Returns the current rendition as a IRendition.
+  
+## Object interfaces
+
+| Name              | Properties                                                                                                                                              |
+|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IStatsTimeRanges  | {<br>start: number;<br>end: number;<br>}                                                                                                                |
+| IStats            | {<br>duration: number;<br>droppedFrames: number;<br>buffered: IStatsTimeRanges[];<br>seekable: IStatsTimeRanges[];<br>played: IStatsTimeRanges[];<br>}  |
+| IRendition        | {<br>audioCodec?: string;<br>bitrate: number;<br>height: number;<br>level?: number;<br>name?: string;<br>videoCodec?: string;<br>width: number;<br>}    |
 
 ## Event emitters
 

@@ -4,7 +4,13 @@ This document will track the changes of this project, based on [Keep a Changelog
 
 ## Wanted features / Roadmap
 - Expose player options and events from dashjs and hls.js.
-- Add Youtube compatibility (most probably through [ngx-youtube-player](https://github.com/orizens/ngx-youtube-player)).
+- Add Youtube compatibility (take a look to [ngx-youtube-player](https://github.com/orizens/ngx-youtube-player)).
+
+## [Unpublished]
+### [Added]
+- New method to retrieve video stats (dropped frames, buffered, etc).
+- New methods to get and set the video renditions.
+- Improving the demo project to see the above features in action.
 
 ## [1.0.0]
 ### [Changed]
