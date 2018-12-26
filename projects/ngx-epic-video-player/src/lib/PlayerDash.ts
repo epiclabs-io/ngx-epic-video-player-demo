@@ -71,6 +71,8 @@ export class PlayerDash extends Player<MediaPlayerClass> {
   }
 
   private convertBitratesToIRenditions(bitrates: BitrateInfo[]): IRendition[] {
+    const videoInfo = this.player.getCurrentTrackFor('video');
+    const audioInfo = this.player.getCurrentTrackFor('audio');
     if (bitrates === undefined || bitrates.length === 0) { return; }
     return bitrates.map((b: BitrateInfo) => {
       return {
@@ -78,7 +80,18 @@ export class PlayerDash extends Player<MediaPlayerClass> {
         height: b.height !== undefined ? b.height : undefined,
         level: b.qualityIndex !== undefined ? b.qualityIndex : undefined,
         width: b.width !== undefined ? b.width : undefined,
+        videoCodec: videoInfo && videoInfo.codec ? this.getCodecName(videoInfo.codec) : undefined,
+        audioCodec: audioInfo && audioInfo.codec ? this.getCodecName(audioInfo.codec) : undefined,
       };
     });
+  }
+
+  private getCodecName(codec: string): string {
+    const re = /"(.*?)"/g;
+    const codecName = re.exec(codec);
+    if (codecName !== undefined && !!codecName[1]) {
+      return codecName[1];
+    }
+    return;
   }
 }
