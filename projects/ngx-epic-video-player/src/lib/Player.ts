@@ -13,11 +13,12 @@ export interface IStatsTimeRanges {
 }
 
 export interface IStats {
+  buffered: IStatsTimeRanges[];
   duration: number;
   droppedFrames: number;
-  buffered: IStatsTimeRanges[];
-  seekable: IStatsTimeRanges[];
+  loadTime: number;
   played: IStatsTimeRanges[];
+  seekable: IStatsTimeRanges[];
 }
 
 export interface IRendition {
@@ -36,15 +37,25 @@ export abstract class Player<T> {
   public player: T;
   public playerType: PlayerType;
   stats: IStats;
+  loadStartTime: number;
 
   updateStats = () => {
     this.stats = {
-      duration: Utils.getDuration(this.htmlPlayer),
-      droppedFrames: Utils.getDroppedFrames(this.htmlPlayer),
       buffered: Utils.timeRangesToIStatsTimeRanges(Utils.getBuffered(this.htmlPlayer)),
-      seekable: Utils.timeRangesToIStatsTimeRanges(Utils.getSeekable(this.htmlPlayer)),
+      droppedFrames: Utils.getDroppedFrames(this.htmlPlayer),
+      duration: Utils.getDuration(this.htmlPlayer),
+      loadTime: this.stats.loadTime,
       played: Utils.timeRangesToIStatsTimeRanges(Utils.getPlayed(this.htmlPlayer)),
+      seekable: Utils.timeRangesToIStatsTimeRanges(Utils.getSeekable(this.htmlPlayer)),
     };
+  }
+
+  loadStart = () => {
+    this.loadStartTime = (new Date()).getTime();
+  }
+
+  loadEnd = () => {
+    this.stats.loadTime = ((new Date()).getTime() - this.loadStartTime) / 1000;
   }
 
   protected constructor(public url: string, public htmlPlayer: HTMLVideoElement) {
@@ -68,10 +79,14 @@ export abstract class Player<T> {
 
   initListeners(): void {
     this.htmlPlayer.addEventListener('timeupdate', this.updateStats);
+    this.htmlPlayer.addEventListener('loadstart', this.loadStart);
+    this.htmlPlayer.addEventListener('canplay', this.loadEnd);
   }
 
   destroyListeners(): void {
     this.htmlPlayer.removeEventListener('timeupdate', this.updateStats);
+    this.htmlPlayer.removeEventListener('loadstart', this.loadStart);
+    this.htmlPlayer.removeEventListener('canplay', this.loadEnd);
   }
 
   protected reset(): void {
@@ -81,11 +96,12 @@ export abstract class Player<T> {
 
   protected resetStats(): void {
     this.stats = {
+      buffered: [],
       duration: 0,
       droppedFrames: 0,
-      buffered: [],
-      seekable: [],
+      loadTime: -1,
       played: [],
+      seekable: [],
     };
   }
 }

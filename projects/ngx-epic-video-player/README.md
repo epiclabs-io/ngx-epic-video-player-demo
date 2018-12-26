@@ -126,11 +126,12 @@ To see a **live demo** [click here](https://ngx-epic-video-player-demo.herokuapp
   
 ## Object interfaces
 
-| Name              | Properties                                                                                                                                              |
-|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| IStatsTimeRanges  | {<br>start: number;<br>end: number;<br>}                                                                                                                |
-| IStats            | {<br>duration: number;<br>droppedFrames: number;<br>buffered: IStatsTimeRanges[];<br>seekable: IStatsTimeRanges[];<br>played: IStatsTimeRanges[];<br>}  |
-| IRendition        | {<br>audioCodec?: string;<br>bitrate: number;<br>height: number;<br>level?: number;<br>name?: string;<br>videoCodec?: string;<br>width: number;<br>}    |
+| Name              | Properties                                                                                                                                                        |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IStatsTimeRanges  | start: number;<br>end: number;                                                                                                                                    |
+| IStats            | buffered: IStatsTimeRanges[];<br>duration: number;<br>droppedFrames: number;<br>loadTime: number;<br>played: IStatsTimeRanges[];<br>seekable: IStatsTimeRanges[]; |
+| IRendition        | audioCodec?: string;<br>bitrate: number;<br>height: number;<br>level?: number;<br>name?: string;<br>videoCodec?: string;<br>width: number;                        |
+
 
 ## Event emitters
 
