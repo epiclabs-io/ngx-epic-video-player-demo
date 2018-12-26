@@ -5,3 +5,4 @@
 export * from './lib/ngx-epic-video-player.service';
 export * from './lib/ngx-epic-video-player.component';
 export * from './lib/ngx-epic-video-player.module';
+export * from './lib/Player';
