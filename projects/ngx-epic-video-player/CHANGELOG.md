@@ -6,6 +6,13 @@ This document will track the changes of this project, based on [Keep a Changelog
 - Expose player options and events from dashjs and hls.js.
 - Add Youtube compatibility (take a look to [ngx-youtube-player](https://github.com/orizens/ngx-youtube-player)).
 
+## [1.0.2]
+### [Fixed]
+- Loading time was being recalculated after some events and when video was in loop mode.
+###[Added]
+- Attaching audio & video codecs info to the renditions for Dash.js.
+
+
 ## [1.0.1]
 ### [Added]
 - New method to retrieve video stats (dropped frames, loading time, buffered, etc).

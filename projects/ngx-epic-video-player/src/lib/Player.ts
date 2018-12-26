@@ -51,11 +51,17 @@ export abstract class Player<T> {
   }
 
   loadStart = () => {
-    this.loadStartTime = (new Date()).getTime();
+    this.updateStats();
+    if (this.stats.loadTime === -1) {
+      this.loadStartTime = (new Date()).getTime();
+    }
   }
 
   loadEnd = () => {
-    this.stats.loadTime = ((new Date()).getTime() - this.loadStartTime) / 1000;
+    this.updateStats();
+    if (this.stats.loadTime === -1) {
+      this.stats.loadTime = ((new Date()).getTime() - this.loadStartTime) / 1000;
+    }
     this.updateStats();
   }
 
