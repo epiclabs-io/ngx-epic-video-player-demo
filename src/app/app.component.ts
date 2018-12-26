@@ -33,6 +33,7 @@ export class AppComponent {
 
   onVideoUrlChange(newValue: string): void {
     this.desiredRendition = this.autoRendition;
+    this.videoUrl = newValue;
   }
 
   onEvent(e: any): void {
