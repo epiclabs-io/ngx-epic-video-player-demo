@@ -56,6 +56,7 @@ export abstract class Player<T> {
 
   loadEnd = () => {
     this.stats.loadTime = ((new Date()).getTime() - this.loadStartTime) / 1000;
+    this.updateStats();
   }
 
   protected constructor(public url: string, public htmlPlayer: HTMLVideoElement) {
