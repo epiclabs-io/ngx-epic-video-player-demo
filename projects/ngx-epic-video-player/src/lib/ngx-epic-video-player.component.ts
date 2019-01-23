@@ -135,8 +135,8 @@ export class NgxEpicVideoPlayerComponent implements OnDestroy {
     return this.player.getCurrentRendition();
   }
 
-  setRendition(rendition: IRendition | number): void {
-    return this.player.setRendition(rendition);
+  setRendition(rendition: IRendition | number, immediately?: boolean): void {
+    return this.player.setRendition(rendition, immediately);
   }
 
   private init(): void {

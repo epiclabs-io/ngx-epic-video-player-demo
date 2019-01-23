@@ -76,7 +76,7 @@ export abstract class Player<T> {
 
   abstract getRenditions(): IRendition[];
 
-  abstract setRendition(rendition: IRendition | number): void;
+  abstract setRendition(rendition: IRendition | number, immediately: boolean): void;
 
   abstract getCurrentRendition(): IRendition;
 

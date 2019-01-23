@@ -1,20 +1,30 @@
 import { BitrateInfo, MediaPlayer, MediaPlayerClass } from 'dashjs';
 import { IRendition, Player, PlayerType } from './Player';
 
+interface ILoadConfig {
+  rendition?: number;
+  time?: number;
+}
+
 export class PlayerDash extends Player<MediaPlayerClass> {
   constructor(url: string, htmlPlayer: HTMLVideoElement) {
     super(url, htmlPlayer);
   }
 
-  load(): void {
+  load(config?: ILoadConfig): void {
     this.reset();
     try {
       this.player = MediaPlayer().create();
       this.player.getDebug().setLogToBrowserConsole(false);
-      this.player.initialize(this.htmlPlayer, this.url, false);
-
+      let url = this.url;
+      if (config && config.time !== undefined && typeof config.time === 'number') {
+        url += `#s=${config.time}`;
+      }
+      this.player.initialize(this.htmlPlayer, url, false);
+      if (config && config.rendition !== undefined && typeof config.rendition === 'number') {
+        this.player.setInitialBitrateFor('video', config.rendition);
+      }
       this.initListeners();
-
       this.playerType = PlayerType.DASH;
     } catch (e) {
       console.error(e);
@@ -31,17 +41,23 @@ export class PlayerDash extends Player<MediaPlayerClass> {
   }
 
   getRenditions(): IRendition[] {
-    // (window as any).player = this.player; // only for debug
-    return this.convertBitratesToIRenditions(this.player.getBitrateInfoListFor('video'));
+    if (this.player !== undefined) {
+      return this.convertBitratesToIRenditions(this.player.getBitrateInfoListFor('video'));
+    }
   }
 
-  setRendition(rendition: IRendition | number): void {
+  setRendition(rendition: IRendition | number, immediately: boolean): void {
     if (typeof rendition === 'number') {
-      if (rendition === -1) {
+      if (rendition === undefined || rendition === -1) {
         this.player.setAutoSwitchQualityFor('video', true);
       } else {
         this.player.setAutoSwitchQualityFor('video', false);
+        this.player.enableLastBitrateCaching(false);
         this.player.setQualityFor('video', rendition);
+        if (immediately) {
+          // dash.js does not provide this feature so we need to reload the player
+          this.load({rendition, time: this.player.time()});
+        }
       }
       return;
     } else {
@@ -49,14 +65,12 @@ export class PlayerDash extends Player<MediaPlayerClass> {
       if (renditions !== undefined && renditions.length > 0) {
         for (let i = 0; i < renditions.length; i++) {
           if (renditions[i].bitrate === rendition.bitrate) {
-            this.player.setAutoSwitchQualityFor('video', false);
-            this.player.setQualityFor('video', i);
-            return;
+            return this.setRendition(i, immediately);
           }
         }
       }
     }
-    return;
+    return this.setRendition(-1, immediately);
   }
 
   getCurrentRendition(): IRendition {

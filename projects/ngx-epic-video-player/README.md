@@ -114,11 +114,13 @@ To see a **live demo** [click here](https://ngx-epic-video-player-demo.herokuapp
   
   Returns the renditions of the video as an array of IRendition.
 
-- **setRendition(rendition: IRendition | number)**
+- **setRendition(rendition: IRendition | number, immediately?: boolean)**
 
   Set the desired rendition. It will not drop the already buffered segments.
   
-  If the parameter is the number -1, the rendition selection will be set to automatic.
+  If *rendition* is -1, the rendition selection will be set to automatic.
+  
+  If *immediately* is true, the buffer will be cleaned and the new rendition will be automatically rendered. In some cases (i.e. dashjs) it requires to reset the player.
 
 - **getCurrentRendition()**
 
