@@ -4,12 +4,19 @@ This document will track the changes of this project, based on [Keep a Changelog
 
 ## Wanted features / Roadmap
 - Expose player options and events from dashjs and hls.js.
+- Add MP4 and WEBM compatibility.
 - Add Youtube compatibility (take a look to [ngx-youtube-player](https://github.com/orizens/ngx-youtube-player)).
+
+## [1.0.3]
+### [Fixed]
+- Avoiding errors retrieving/setting renditions when browser does not support it. 
+### [Added]
+- Added parameter to *player.setLevel()* method to force an immediate rendition change.
 
 ## [1.0.2]
 ### [Fixed]
 - Loading time was being recalculated after some events and when video was in loop mode.
-###[Added]
+### [Added]
 - Attaching audio & video codecs info to the renditions for Dash.js.
 
 

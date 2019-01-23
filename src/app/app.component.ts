@@ -53,7 +53,7 @@ export class AppComponent {
 
   onSelectedRenditionChange(): void {
     if (this.desiredRendition !== undefined) {
-      this.evp.setRendition(this.renditions[this.desiredRendition]);
+      this.evp.setRendition(this.renditions[this.desiredRendition], true);
     }
   }
 
