@@ -27,8 +27,9 @@ export class PlayerHls extends Player<Hls> {
   destroy(): void {
     try {
       this.htmlPlayer.src = '';
-      this.player.destroy();
-      this.player = undefined;
+      if (this.player !== undefined) {
+        this.player.destroy();
+      }
     } catch (e) {
       console.warn(e);
     } finally {
@@ -37,7 +38,6 @@ export class PlayerHls extends Player<Hls> {
   }
 
   getRenditions(): IRendition[] {
-    // (window as any).player = this.player; // only for debug
     if (this.player !== undefined) {
       return this.convertLevelsToIRenditions(this.player.levels as any);
     }

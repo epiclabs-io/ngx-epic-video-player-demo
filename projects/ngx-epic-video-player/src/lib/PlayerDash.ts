@@ -33,7 +33,9 @@ export class PlayerDash extends Player<MediaPlayerClass> {
 
   destroy(): void {
     try {
-      this.player.reset();
+      if (this.player !== undefined) {
+        this.player.reset();
+      }
       this.playerType = undefined;
     } catch (e) {
       console.error(e);
