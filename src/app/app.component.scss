@@ -1,3 +1,9 @@
+$width-break: 950px;
+
+body {
+  min-width: 800px;
+}
+
 button {
   margin-right: 8px;
 }
@@ -14,10 +20,16 @@ button {
   flex-direction: row;
 
   .video-wrapper {
+    @media (max-width: $width-break) {
+      width: 100%;
+    }
     width: 70%;
   }
 
   .log-wrapper {
+    @media (max-width: $width-break) {
+      display: none;
+    }
     box-sizing: border-box;
     width: 30%;
     margin-left: 2em;
@@ -64,11 +76,16 @@ button {
 .video-stats {
   margin-top: 1em;
   padding: .5em;
-  border: 1px solid lightgray;
   border-radius: 5px;
+  max-height: 500px;
 
-  p {
-    margin-top: 0;
-    font-weight: 800;
+  div {
+    border: 1px solid lightgray;
+    overflow-y: auto;
+
+    p {
+      margin-top: 0;
+      font-weight: 800;
+    }
   }
 }
