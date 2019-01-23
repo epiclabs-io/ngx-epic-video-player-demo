@@ -14,6 +14,7 @@ export class PlayerHls extends Player<Hls> {
         this.player.loadSource(this.url);
         this.player.attachMedia(this.htmlPlayer);
       } else if (this.htmlPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+        this.player = undefined;
         this.htmlPlayer.src = this.url;
       }
       this.initListeners();
@@ -25,7 +26,9 @@ export class PlayerHls extends Player<Hls> {
 
   destroy(): void {
     try {
+      this.htmlPlayer.src = '';
       this.player.destroy();
+      this.player = undefined;
     } catch (e) {
       console.warn(e);
     } finally {
@@ -35,25 +38,35 @@ export class PlayerHls extends Player<Hls> {
 
   getRenditions(): IRendition[] {
     // (window as any).player = this.player; // only for debug
-    return this.convertLevelsToIRenditions(this.player.levels as any);
+    if (this.player !== undefined) {
+      return this.convertLevelsToIRenditions(this.player.levels as any);
+    }
+    return;
   }
 
-  setRendition(rendition: IRendition | number): void {
+  setRendition(rendition: IRendition | number, immediately: boolean): void {
+    if (this.player === undefined) {
+      return;
+    }
+
     if (typeof rendition === 'number') {
-      this.player.loadLevel = rendition;
+      if (immediately) {
+        this.player.currentLevel = rendition;
+      } else {
+        this.player.loadLevel = rendition;
+      }
       return;
     } else {
       const renditions = this.getRenditions();
       if (renditions !== undefined && renditions.length > 0) {
         for (let i = 0; i < renditions.length; i++) {
           if (renditions[i].bitrate === rendition.bitrate) {
-            this.player.loadLevel = i;
-            return;
+            return this.setRendition(i,  immediately);
           }
         }
       }
     }
-    return;
+    return this.setRendition(-1,  immediately);
   }
 
   getCurrentRendition(): IRendition {

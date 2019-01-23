@@ -1,6 +1,6 @@
 {
   "name": "ngx-epic-video-player",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": {
     "name": "Adrian Caballero",
     "email": "adrian@epiclabs.io",
@@ -15,15 +15,15 @@
     "email": "adrian@epiclabs.io"
   },
   "peerDependencies": {
-    "@angular/common": "^7.1.3",
-    "@angular/core": "^7.1.3"
+    "@angular/common": "7.2.1",
+    "@angular/core": "7.2.1"
   },
   "dependencies": {
-    "dashjs": "~2.9.2",
-    "hls.js": "~0.11.0",
-    "stream": "~0.0.2"
+    "dashjs": "2.9.2",
+    "hls.js": "0.12.2",
+    "stream": "0.0.2"
   },
   "devDependencies": {
-    "@types/hls.js": "0.10.2"
+    "@types/hls.js": "0.12.0"
   }
 }
