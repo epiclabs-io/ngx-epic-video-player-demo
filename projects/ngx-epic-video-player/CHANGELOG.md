@@ -7,11 +7,21 @@ This document will track the changes of this project, based on [Keep a Changelog
 - Add MP4 and WEBM compatibility.
 - Add Youtube compatibility (take a look to [ngx-youtube-player](https://github.com/orizens/ngx-youtube-player)).
 
+## [1.0.4]
+## [Changed]
+- *immediate* for *player.setRendition()* only works on players providing this feature (i.e., it will NOT provide an immediate rendition change on Dashjs).
+## [Added]
+- Added *initialRenditionKbps* attribute to set the desired initial rendition for Dash.
+- Added *initialRenditionIndex* attribute to set the desired initial rendition for Hls.
+- Added *poster* attribute to set the poster attribute of native video element.
+## [Fixed]
+- Better error management.
+
 ## [1.0.3]
 ### [Fixed]
 - Avoiding errors retrieving/setting renditions when browser does not support it. 
 ### [Added]
-- Added parameter to *player.setLevel()* method to force an immediate rendition change.
+- Added parameter to *player.setRendition()* method to force an immediate rendition change.
 
 ## [1.0.2]
 ### [Fixed]

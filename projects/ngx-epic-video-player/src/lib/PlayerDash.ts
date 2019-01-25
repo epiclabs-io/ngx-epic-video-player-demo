@@ -1,29 +1,25 @@
 import { BitrateInfo, MediaPlayer, MediaPlayerClass } from 'dashjs';
-import { IRendition, Player, PlayerType } from './Player';
-
-interface ILoadConfig {
-  rendition?: number;
-  time?: number;
-}
+import { IRendition, Player, PlayerType, IPlayerConfig } from './Player';
 
 export class PlayerDash extends Player<MediaPlayerClass> {
-  constructor(url: string, htmlPlayer: HTMLVideoElement) {
-    super(url, htmlPlayer);
+  constructor(url: string, htmlPlayer: HTMLVideoElement, config: IPlayerConfig) {
+    super(url, htmlPlayer, config);
   }
 
-  load(config?: ILoadConfig): void {
+  load(): void {
     this.reset();
     try {
       this.player = MediaPlayer().create();
       this.player.getDebug().setLogToBrowserConsole(false);
-      let url = this.url;
-      if (config && config.time !== undefined && typeof config.time === 'number') {
-        url += `#s=${config.time}`;
+      this.player.initialize(this.htmlPlayer, this.url, false);
+
+      // an initial rendition needs to be loaded
+      if (this.config && typeof this.config.initialRenditionKbps === 'number') {
+        this.player.setAutoSwitchQualityFor('video', false);
+        this.player.enableLastBitrateCaching(false);
+        this.player.setInitialBitrateFor('video', this.config.initialRenditionKbps);
       }
-      this.player.initialize(this.htmlPlayer, url, false);
-      if (config && config.rendition !== undefined && typeof config.rendition === 'number') {
-        this.player.setInitialBitrateFor('video', config.rendition);
-      }
+
       this.initListeners();
       this.playerType = PlayerType.DASH;
     } catch (e) {
@@ -33,30 +29,37 @@ export class PlayerDash extends Player<MediaPlayerClass> {
 
   destroy(): void {
     try {
-      this.player.reset();
+      if (this.player !== undefined) {
+        this.player.reset();
+      }
       this.playerType = undefined;
     } catch (e) {
-      console.error(e);
+      console.warn(e);
     }
   }
 
   getRenditions(): IRendition[] {
-    if (this.player !== undefined) {
-      return this.convertBitratesToIRenditions(this.player.getBitrateInfoListFor('video'));
+    if (this.player === undefined) {
+      return;
     }
+
+    return this.convertBitratesToIRenditions(this.player.getBitrateInfoListFor('video'));
   }
 
   setRendition(rendition: IRendition | number, immediately: boolean): void {
+    if (this.player === undefined) {
+      return;
+    }
+
     if (typeof rendition === 'number') {
-      if (rendition === undefined || rendition === -1) {
+      if (rendition === -1) {
         this.player.setAutoSwitchQualityFor('video', true);
       } else {
         this.player.setAutoSwitchQualityFor('video', false);
         this.player.enableLastBitrateCaching(false);
         this.player.setQualityFor('video', rendition);
         if (immediately) {
-          // dash.js does not provide this feature so we need to reload the player
-          this.load({rendition, time: this.player.time()});
+          // dash.js does not provide this feature yet
         }
       }
       return;
@@ -74,10 +77,14 @@ export class PlayerDash extends Player<MediaPlayerClass> {
   }
 
   getCurrentRendition(): IRendition {
+    if (this.player === undefined) {
+      return;
+    }
+
     const renditions = this.getRenditions();
     if (renditions !== undefined && renditions.length > 0) {
       const currentQuality = this.player.getQualityFor('video');
-      if (currentQuality >= 0) {
+      if (currentQuality >= 0 && renditions.length > currentQuality) {
         return renditions[currentQuality];
       }
     }

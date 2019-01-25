@@ -1,4 +1,5 @@
 <video #htmlVideoRef
+       [attr.poster]="!!poster ? poster : undefined"
        [attr.autoplay]="autoplay ? true : undefined"
        [attr.id]="videoId ? videoId : undefined"
        [attr.controls]="isTrue(controls) ? true : undefined"

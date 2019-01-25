@@ -1,9 +1,9 @@
-import { IRendition, Player, PlayerType } from './Player';
+import { IRendition, Player, PlayerType, IPlayerConfig } from './Player';
 import * as Hls from 'hls.js';
 
 export class PlayerHls extends Player<Hls> {
-  constructor(url: string, htmlPlayer: HTMLVideoElement) {
-    super(url, htmlPlayer);
+  constructor(url: string, htmlPlayer: HTMLVideoElement, config: IPlayerConfig) {
+    super(url, htmlPlayer, config);
   }
 
   load(): void {
@@ -13,10 +13,19 @@ export class PlayerHls extends Player<Hls> {
         this.player = new Hls();
         this.player.loadSource(this.url);
         this.player.attachMedia(this.htmlPlayer);
+
+        // an initial rendition needs to be loaded
+        if (this.config && typeof this.config.initialRenditionIndex === 'number')  {
+          this.player.startLevel = this.config.initialRenditionIndex;
+        }
+
+      // hls is not supported but the native player is able to load the video
+      // some features (like renditions getter/setter) will NOT be available
       } else if (this.htmlPlayer.canPlayType('application/vnd.apple.mpegurl')) {
         this.player = undefined;
         this.htmlPlayer.src = this.url;
       }
+
       this.initListeners();
       this.playerType = PlayerType.HLS;
     } catch (e) {
@@ -27,8 +36,9 @@ export class PlayerHls extends Player<Hls> {
   destroy(): void {
     try {
       this.htmlPlayer.src = '';
-      this.player.destroy();
-      this.player = undefined;
+      if (this.player !== undefined) {
+        this.player.destroy();
+      }
     } catch (e) {
       console.warn(e);
     } finally {
@@ -37,11 +47,11 @@ export class PlayerHls extends Player<Hls> {
   }
 
   getRenditions(): IRendition[] {
-    // (window as any).player = this.player; // only for debug
-    if (this.player !== undefined) {
-      return this.convertLevelsToIRenditions(this.player.levels as any);
+    if (this.player === undefined) {
+      return;
     }
-    return;
+
+    return this.convertLevelsToIRenditions(this.player.levels);
   }
 
   setRendition(rendition: IRendition | number, immediately: boolean): void {
@@ -70,19 +80,24 @@ export class PlayerHls extends Player<Hls> {
   }
 
   getCurrentRendition(): IRendition {
+    if (this.player === undefined) {
+      return;
+    }
+
     const renditions = this.getRenditions();
     if (renditions !== undefined && renditions.length > 0) {
       const currentLevel = this.player.currentLevel;
-      if (currentLevel >= 0) {
+      if (currentLevel >= 0 && renditions.length > currentLevel) {
         return renditions[currentLevel];
       }
     }
     return;
   }
 
-  private convertLevelsToIRenditions(levels: Hls.levelSwitchingData[]): IRendition[] {
+  // update any to Hls.Level[] after Hls.js typings fixing
+  private convertLevelsToIRenditions(levels: any): IRendition[] {
     if (levels === undefined || levels.length === 0) { return; }
-    return levels.map((l: Hls.levelSwitchingData) => {
+    return levels.map(l => {
       return {
         audioCodec: l.audioCodec !== undefined ? l.audioCodec : undefined,
         bitrate: l.bitrate !== undefined ? l.bitrate : undefined,

@@ -1,6 +1,6 @@
 {
   "name": "ngx-epic-video-player",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "author": {
     "name": "Adrian Caballero",
     "email": "adrian@epiclabs.io",
@@ -15,8 +15,8 @@
     "email": "adrian@epiclabs.io"
   },
   "peerDependencies": {
-    "@angular/common": "7.2.1",
-    "@angular/core": "7.2.1"
+    "@angular/common": "7.2.2",
+    "@angular/core": "7.2.2"
   },
   "dependencies": {
     "dashjs": "2.9.2",
