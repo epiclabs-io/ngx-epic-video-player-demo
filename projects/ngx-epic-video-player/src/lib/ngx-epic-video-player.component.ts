@@ -50,6 +50,35 @@ export class NgxEpicVideoPlayerComponent implements OnDestroy {
     }
   }
 
+  // initialRenditionkbps is used to be able to initialize Dashjs with a desired rendition (by bitrate in kbps of the rendition)
+  initialRenditionKbps: number;
+  @Input('initialRenditionKbps')
+  set setInitialRenditionKbps(value: number) {
+    value = value !== undefined ? parseInt(value.toString(), 10) : undefined;
+    if (!isNaN(value) && value !== this.initialRenditionKbps) {
+      this.initialRenditionKbps = value + 1;
+      if (this.player !== undefined && !!this.url) {
+        this.destroy();
+        this.init();
+      }
+    }
+  }
+
+  // initialRenditionIndex is used to be able to initialize Hls.js with a desired rendition (by index of the renditions array)
+  initialRenditionIndex: number;
+  @Input('initialRenditionIndex')
+  set setinitialRenditionIndex(value: number) {
+    value = value !== undefined ? parseInt(value.toString(), 10) : undefined;
+    if (!isNaN(value) && value !== this.initialRenditionKbps) {
+      this.initialRenditionIndex = value;
+      if (this.player !== undefined && !!this.url) {
+        this.destroy();
+        this.init();
+      }
+    }
+  }
+
+  @Input() poster: string;
   @Input() videoId: string;
   @Input() controls: boolean;
   @Input() loop: boolean;
@@ -174,10 +203,15 @@ export class NgxEpicVideoPlayerComponent implements OnDestroy {
     const filename = this.url.substr(this.url.lastIndexOf('/') + 1);
     const extension = filename.split('.').pop();
 
+    const config = {
+      initialRenditionIndex: this.initialRenditionIndex,
+      initialRenditionKbps: this.initialRenditionKbps,
+    };
+
     if (extension === 'm3u8') {
-      this.player = new PlayerHls(this.url, this.getHtmlVideo());
+      this.player = new PlayerHls(this.url, this.getHtmlVideo(), config);
     } else {
-      this.player = new PlayerDash(this.url, this.getHtmlVideo());
+      this.player = new PlayerDash(this.url, this.getHtmlVideo(), config);
     }
   }
 

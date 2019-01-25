@@ -31,6 +31,11 @@ export interface IRendition {
   width: number;
 }
 
+export interface IPlayerConfig {
+  initialRenditionKbps?: number;
+  initialRenditionIndex?: number;
+}
+
 export type PlayerClassType = MediaPlayerClass | Hls;
 
 export abstract class Player<T> {
@@ -65,7 +70,7 @@ export abstract class Player<T> {
     this.updateStats();
   }
 
-  protected constructor(public url: string, public htmlPlayer: HTMLVideoElement) {
+  protected constructor(protected url: string, protected htmlPlayer: HTMLVideoElement, protected config: IPlayerConfig) {
     this.resetStats();
     this.load();
   }

@@ -65,16 +65,18 @@ To see a **live demo** [click here](https://ngx-epic-video-player-demo.herokuapp
 
 # API
 
-## Properties
+## Attributes
 
-| Property      | Type              | Default value | Description                                                                                                              |
-|---------------|-------------------|---------------|--------------------------------------------------------------------------------------------------------------------------|
-| **autoplay**  | boolean or string | undefined     | Whether or not the video should start playing as soon as it is loaded.                                                   |
-| **controls**  | boolean or string | undefined     | Whether or not the video should show the controls like play, pause, etc.                                                 |
-| **videoId**   | string            | undefined     | Id to be set to the inner HTML video element.                                                                            |
-| **loop**      | boolean or string | undefined     | Whether or not the video should start over again when finished.                                                          |
-| **muted**     | boolean or string | undefined     | Whether or not the audio should be muted. It sets the muted property to the video element, but also set the volume to 0. |
-| **url**       | boolean or string | undefined     | The URL of the manifest for the video to be loaded.                                                                      |
+| Attribute                 | Type              | Default value | Description                                                                                                               |
+|---------------------------|-------------------|---------------|---------------------------------------------------------------------------------------------------------------------------|
+| **autoplay**              | boolean or string | undefined     | Whether or not the video should start playing as soon as it is loaded.                                                    |
+| **controls**              | boolean or string | undefined     | Whether or not the video should show the controls like play, pause, etc.                                                  |
+| **videoId**               | string            | undefined     | Id to be set to the inner HTML video element.                                                                             |
+| **loop**                  | boolean or string | undefined     | Whether or not the video should start over again when finished.                                                           |
+| **muted**                 | boolean or string | undefined     | Whether or not the audio should be muted. It sets the muted property to the video element, but also set the volume to 0.  |
+| **url**                   | boolean or string | undefined     | The URL of the manifest for the video to be loaded.                                                                       |
+| **initialRenditionKbps**  | number or string  | undefined     | The Kbps of the desired initial rendition (valid for Dash)                                                                |
+| **initialRenditionIndex** | number or string  | undefined     | The index of the desired initial rendition (valid for Hls)                                                                |
 
 ## Methods
 
@@ -120,7 +122,7 @@ To see a **live demo** [click here](https://ngx-epic-video-player-demo.herokuapp
   
   If *rendition* is -1, the rendition selection will be set to automatic.
   
-  If *immediately* is true, the buffer will be cleaned and the new rendition will be automatically rendered. In some cases (i.e. dashjs) it requires to reset the player.
+  If *immediately* is true, the buffer will be cleaned and the new rendition will be automatically rendered. In some cases (i.e. dashjs) it is not yet possible.
 
 - **getCurrentRendition()**
 
