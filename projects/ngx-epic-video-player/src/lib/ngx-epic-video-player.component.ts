@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild, ElementRef } from '@angular/core';
 import { IRendition, IStats, Player, PlayerClassType } from './Player';
 import { PlayerDash } from './PlayerDash';
 import { PlayerHls } from './PlayerHls';
@@ -15,7 +15,7 @@ export interface IEvent {
 })
 export class NgxEpicVideoPlayerComponent implements OnDestroy {
 
-  @ViewChild('htmlVideoRef') htmlVideoRef: any; // Correct type (ElementRef<HTMLVideoElement>) causes a compilation warning;
+  @ViewChild('htmlVideoRef') htmlVideoRef: ElementRef<HTMLVideoElement>;
 
   url: string;
   @Input('url')

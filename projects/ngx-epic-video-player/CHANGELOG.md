@@ -13,6 +13,7 @@ This document will track the changes of this project, based on [Keep a Changelog
 ## [Added]
 - Added *initialRenditionKbps* attribute to set the desired initial rendition for Dash.
 - Added *initialRenditionIndex* attribute to set the desired initial rendition for Hls.
+- Added *poster* attribute to set the poster attribute of native video element.
 ## [Fixed]
 - Better error management.
 

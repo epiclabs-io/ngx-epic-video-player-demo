@@ -67,16 +67,17 @@ To see a **live demo** [click here](https://ngx-epic-video-player-demo.herokuapp
 
 ## Attributes
 
-| Attribute                 | Type              | Default value | Description                                                                                                               |
-|---------------------------|-------------------|---------------|---------------------------------------------------------------------------------------------------------------------------|
-| **autoplay**              | boolean or string | undefined     | Whether or not the video should start playing as soon as it is loaded.                                                    |
-| **controls**              | boolean or string | undefined     | Whether or not the video should show the controls like play, pause, etc.                                                  |
-| **videoId**               | string            | undefined     | Id to be set to the inner HTML video element.                                                                             |
-| **loop**                  | boolean or string | undefined     | Whether or not the video should start over again when finished.                                                           |
-| **muted**                 | boolean or string | undefined     | Whether or not the audio should be muted. It sets the muted property to the video element, but also set the volume to 0.  |
-| **url**                   | boolean or string | undefined     | The URL of the manifest for the video to be loaded.                                                                       |
-| **initialRenditionKbps**  | number or string  | undefined     | The Kbps of the desired initial rendition (valid for Dash)                                                                |
-| **initialRenditionIndex** | number or string  | undefined     | The index of the desired initial rendition (valid for Hls)                                                                |
+| Attribute                 | Type              | Default value | Description                                                                                                                                           |
+|---------------------------|-------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **autoplay**              | boolean or string | undefined     | Whether or not the video should start playing as soon as it is loaded.                                                                                |
+| **controls**              | boolean or string | undefined     | Whether or not the video should show the controls like play, pause, etc.                                                                              |
+| **videoId**               | string            | undefined     | Id to be set to the inner HTML video element.                                                                                                         |
+| **loop**                  | boolean or string | undefined     | Whether or not the video should start over again when finished.                                                                                       |
+| **muted**                 | boolean or string | undefined     | Whether or not the audio should be muted. It sets the muted property to the video element, but also set the volume to 0.                              |
+| **url**                   | boolean or string | undefined     | The URL of the manifest for the video to be loaded.                                                                                                   |
+| **initialRenditionKbps**  | number or string  | undefined     | The Kbps of the desired initial rendition (valid for Dash)                                                                                            |
+| **initialRenditionIndex** | number or string  | undefined     | The index of the desired initial rendition (valid for Hls)                                                                                            |
+| **poster**                | string            | undefined     | Poster URL. This attribute will be set to the native video element (W3C)[https://www.w3.org/TR/2009/WD-html5-20090825/video.html#attr-video-poster]   |
 
 ## Methods
 
