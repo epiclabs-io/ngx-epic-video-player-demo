@@ -12,8 +12,8 @@ export class AppComponent {
   @ViewChild('evp') evp: NgxEpicVideoPlayerComponent;
 
   videoUrl = 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd';
-  autoplay = true;
-  controls = false;
+  autoplay = false;
+  controls = true;
   muted = true;
   loop = false;
 

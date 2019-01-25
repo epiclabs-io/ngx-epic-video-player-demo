@@ -4,8 +4,8 @@
   "lib": {
     "entryFile": "src/public_api.ts",
     "umdModuleIds": {
-      "dashjs": "~2.9.2",
-      "hls.js": "~0.11.0"
+      "dashjs": "2.9.2",
+      "hls.js": "0.12.2"
     }
   },
   "whitelistedNonPeerDependencies": [
