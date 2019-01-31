@@ -210,8 +210,38 @@ export class NgxEpicVideoPlayerComponent implements OnDestroy {
 
     if (extension === 'm3u8') {
       this.player = new PlayerHls(this.url, this.getHtmlVideo(), config);
+      (this.player.player as any).on('keySystemNoKeys', this.errorListener);
+      (this.player.player as any).on('keySystemNoAccess', this.errorListener);
+      (this.player.player as any).on('keySystemNoSession', this.errorListener);
+      (this.player.player as any).on('keySystemLicenseRequestFailed', this.errorListener);
+      (this.player.player as any).on('manifestLoadError', this.errorListener);
+      (this.player.player as any).on('manifestLoadTimeOut', this.errorListener);
+      (this.player.player as any).on('manifestParsingError', this.errorListener);
+      (this.player.player as any).on('manifestIncompatibleCodecsError', this.errorListener);
+      (this.player.player as any).on('levelLoadError', this.errorListener);
+      (this.player.player as any).on('levelLoadTimeOut', this.errorListener);
+      (this.player.player as any).on('levelSwitchError', this.errorListener);
+      (this.player.player as any).on('audioTrackLoadError', this.errorListener);
+      (this.player.player as any).on('audioTrackLoadTimeOut', this.errorListener);
+      (this.player.player as any).on('fragLoadError', this.errorListener);
+      (this.player.player as any).on('fragLoadTimeOut', this.errorListener);
+      (this.player.player as any).on('fragDecryptError', this.errorListener);
+      (this.player.player as any).on('fragParsingError', this.errorListener);
+      (this.player.player as any).on('remuxAllocError', this.errorListener);
+      (this.player.player as any).on('keyLoadError', this.errorListener);
+      (this.player.player as any).on('keyLoadTimeOut', this.errorListener);
+      (this.player.player as any).on('bufferAddCodecError', this.errorListener);
+      (this.player.player as any).on('bufferAppendError', this.errorListener);
+      (this.player.player as any).on('bufferAppendingError', this.errorListener);
+      (this.player.player as any).on('bufferStalledError', this.errorListener);
+      (this.player.player as any).on('bufferFullError', this.errorListener);
+      (this.player.player as any).on('bufferSeekOverHole', this.errorListener);
+      (this.player.player as any).on('bufferNudgeOnStall', this.errorListener);
+      (this.player.player as any).on('internalException', this.errorListener);
     } else {
       this.player = new PlayerDash(this.url, this.getHtmlVideo(), config);
+      (this.player.player as any).on('error', this.errorListener);
+      (this.player.player as any).on('playbackError', this.errorListener);
     }
   }
 

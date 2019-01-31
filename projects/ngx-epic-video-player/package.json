@@ -1,6 +1,6 @@
 {
   "name": "ngx-epic-video-player",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": {
     "name": "Adrian Caballero",
     "email": "adrian@epiclabs.io",
@@ -24,6 +24,6 @@
     "stream": "0.0.2"
   },
   "devDependencies": {
-    "@types/hls.js": "0.12.0"
+    "@types/hls.js": "0.12.1"
   }
 }
